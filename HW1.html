@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <h2 id="title" style="
+    margin-left: 100px;
+">HW #1 -- Basic Syntax Highlighter</h2>
+  <style>
+  /* pre { border: solid 1px } */
+    #pat { width: 90px; }
+    #inp { width: 250px; }
+    .found { color: #0000ff ; }
+    .found2 { color: 	#FF0000; }
+    span span[class=found] {color: #FF0000;}   
+  </style>
+    <style>
+    p {
+      color: white;
+      padding: 5px;
+      border: 2px solid black;
+    }
+  </style> 
+  <style>
+    p {
+      color: black;
+      background-color: #f0ffff;
+    }
+  </style> 
+    
+     <style>
+    pre {
+      color: white;
+      padding: 5px;
+      border: 2px solid black;
+    }
+  </style> 
+  <style>
+    pre {
+      color: black;
+      background-color: #f0ffff;
+    }
+  </style> 
+    
+</head>
+
+    
+<body>
+<h2 id=title></h2>
+
+
+ <textarea type="text" id="inp" style="width:500px;height:250px;margin-left: 40px;" onkeyup="checkRE()"></textarea>
+    
+<p id=out style="width: 570px;" ></p>
+
+
+<b>Sample code</b>
+<pre id=sample style="width: 570px;"></pre>
+
+
+<script>
+"use strict";
+const colors=["#0000A0","##FF0000"];
+    
+function f() { 
+    
+    let longString = "This is a very long string which needs " +
+    "to wrap across multiple lines because " +
+    "otherwise my code is unreadable.";
+    
+    var vegetables = ['Cabbage', 'Turnip', 'Radish', 'Carrot'];
+    var fruits = ["Apple", "Banana", "Orange"];
+    var years = [1950, 1960, 1970, 1980, 1990, 2000, 2010];
+}
+    
+function setValues() {
+    inp.value =  f.toString();
+    checkRE();
+}
+function checkRE() {
+    const p1='"(.*?)"';
+    const p2="\\[.*?]";
+    var result="";
+    if (inp.value) {
+        const exp = new RegExp(p1,'g');
+        const str = "<span class=found>$&</span>";
+        const exp2 = new RegExp(p2,'g');
+        const str2 = "<span class=found2>$&</span>";
+        result = inp.value.replace(exp2, str2);
+        
+        out.innerHTML = result.replace(exp, str).split("\n").join("<br>");
+    }
+}
+    sample.innerText = setValues.toString()+"\n"+checkRE.toString();
+    title.innerText = document.title; setValues();
+</script>
+
+        
+ <a href="https://www.w3schools.com/jsref/jsref_obj_regexp.asp">JavaScript RegExp Reference</a><br>
+ <a href="https://github.com/merveyavuz/Automata">Github</a>
+
+</body>
+</html>
