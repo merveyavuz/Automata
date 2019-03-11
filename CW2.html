@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>L = (1+0)*00 </title>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<pre id=out></pre>
+
+<hr />
+<b>Logic</b>
+
+<style>
+    table { 
+        border-collapse: collapse; 
+        margin: 0 50px; 
+    }
+    th { 
+        color: blue; 
+        padding: 5px 12px; 
+    }
+    td { 
+        border: 1px solid blue; 
+        padding: 5px 12px; 
+        text-align: center; 
+    }
+</style>
+
+
+<table>
+<tr><th></th><th>0</th><th>1</th></tr>
+<tr><th>> a</th><td>ab</td><td>a</td></tr>
+<tr><th>b</th><td>c</td><td>ϕ</td></tr>
+<tr><th>c</th><td>ϕ</td><td>ϕ</td></tr>
+</table>
+
+<table>
+<tr><th></th><th>0</th><th>1</th></tr>
+<tr><th>> A</th><td>B</td><td>A</td></tr>
+<tr><th>&emsp;B</th><td>C</td><td>A</td></tr>
+<tr><th>* C</th><td>C</td><td>A</td></tr>
+</table>
+
+<pre id=sample></pre>
+
+<hr />
+
+<script>
+"use strict";
+function union(a, b) { //set operation using strings
+    let s = a
+    for (let x of b) if (!a.includes(x)) s += x
+    return s
+}
+function intersect(a, b) {
+    let s = ''
+    for (let x of b) if (a.includes(x)) s += x
+    return s
+}
+function delta(q, c) { // (1+0)*00
+    if (q=='a' && c=='0') return 'ab'
+    if (q=='a' && c=='1') return 'a'
+    if (q=='b' && c=='0') return 'c' 
+    return '';  //default -- no transition
+}
+function accept(w, F='c', Q='a') {
+    //w: input String
+    //F: final state(s)
+    //Q: current state(s)
+    let i = 0, txt = Q
+    while (i < w.length) {
+        let c = w[i], T=''
+        for (let q of Q) 
+            T = union(T, delta(q, c))
+        Q = T
+        if (Q == '') break
+        i++; txt += ", "+c+" -> "+Q+'\n'+Q
+    }
+    let a = intersect(Q, F).length > 0
+    return (a? "Accept" : "Reject")
+}
+
+
+
+function test() {
+     let e=/00$/;
+     let a = [] ;
+     let dfa = [] ;
+	let r = [] ;
+     let s="";
+     for (let n=1; n<50; n++) {
+          let w = n.toString(2)  // to binary
+	  console.log(w);
+          if (accept(w)=="Accept") a.push(n);
+	  if (accept2(w)=="Accept") dfa.push(n);
+
+          var result = w.match(e);
+	  if(result!=null) {
+		var digit = parseInt(w, 2);
+		r.push(digit);}
+
+     }
+     s+="NFA: \n"
+     for(let i=0; i<a.length; i++){
+	s += " "+a[i]
+     }
+     s+="\nDFA: \n"
+     for(let i=0; i<dfa.length; i++){
+	s += " "+dfa[i]
+     }
+     s+="\nRegex: \n"
+     for(let i=0; i<r.length; i++){
+	s += " "+r[i]
+     }
+     console.log(r);
+     console.log(dfa); 
+     out.innerHTML = s
+}
+
+
+
+function delta2(q, c) { // (1+0)*00
+    if (q=='a' && c=='0') return 'ab'
+    if (q=='a' && c=='1') return 'a'
+    if (q=='ab' && c=='0') return 'abc'
+    if (q=='ab' && c=='1') return 'a'
+    if (q=='abc' && c=='0') return 'abc' 
+    if (q=='abc' && c=='1') return 'a'
+    if (c=='1') return 'b'
+    return '';  //default -- no transition
+}
+function accept2(w, F='c', q='a') {
+    //w: input String
+    //F: final state(s)
+    //q: current state
+    let i = 0, txt = q
+    while (i < w.length) {
+        q = delta2(q, w[i])
+        if (q == '') break
+        i++; txt += " -> "+q
+    }
+
+    let a = (q!='' && q.includes(F))
+    return (a? "Accept" : "Reject")
+}
+
+
+    title.innerText = document.title;
+    sample.innerText = delta+'\n'+accept+'\n'+delta2;
+    test();
+</script>
+</body>
+</html>
